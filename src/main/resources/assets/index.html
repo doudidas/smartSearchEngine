@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recipes</title>
+        <!-- bootstrap css -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="main.css">
+    </head>
+
+    <body class="container">
+
+        <h1>RECIPES</h1>
+
+        <div class="form-group row">
+            <div class="col-md-6">
+                <label for="nameFilter"> Select recipe by name </label>
+                <select id="filterByName" class="form-control" id="nameFilter">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="timeFilter"> Filter by time - enter how much time you have in minutes </label>
+                <div class="col-md-8">
+                    <input id="timeFilter" class="form-control" type="search">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn-primary" id="search">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <th>Name</th>
+                <th>Ingredients</th>
+                <th>Minutes</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>SAVE NEW RECIPE</h2>
+        <form>
+            <label>Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label>Ingredients (separate by comma):</label>
+            <input type="text" id="ingredients" name="ingredients" required>
+
+            <label>Minutes:</label>
+            <input type="text" id="minutes" name="minutes" required>
+
+            <button class="btn-primary" id="saveRecipe">Save recipe</button>
+        </form>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="main.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,4 @@
+message: Hi
+
+server:
+  rootPath: /api/
