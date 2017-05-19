@@ -11,12 +11,12 @@ import java.util.List;
 
 @Path("/recipes")
 @Produces(MediaType.APPLICATION_JSON)
-public class Resource {
+public class RecipeResource {
 
     private final MongoCollection<Document> collection;
     private List<Recipe> recipes = new ArrayList<>();
 
-    public Resource(MongoDatabase database) {
+    public RecipeResource(MongoDatabase database) {
         this.collection = database.getCollection("recipesCollection");
     }
 

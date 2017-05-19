@@ -17,7 +17,7 @@ public class MongoHealthCheck extends HealthCheck {
     protected Result check() throws Exception {
 
         try {
-            mongoClient.getDatabase("RecipesDatabase").listCollectionNames();
+            mongoClient.getDatabase("SmartSearchDatabase").listCollectionNames();
         } catch(MongoClientException ex) {
             return Result.unhealthy(ex.getMessage());
         }

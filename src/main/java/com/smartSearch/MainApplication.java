@@ -31,10 +31,12 @@ public class MainApplication extends Application<MainConfiguration> {
     @Override
     public void run(MainConfiguration mainConfiguration, Environment environment) throws UnknownHostException {
         MongoClient mongoClient = new MongoClient("localhost", 27017);
-        MongoDatabase database = mongoClient.getDatabase("RecipesDatabase");
+        MongoDatabase database = mongoClient.getDatabase("SmartSearchDatabase");
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
-        final Resource resource = new Resource(database);
+        final RecipeResource resource = new RecipeResource(database);
+        final UserResource userResource = new UserResource(database);
         environment.jersey().register(resource);
+        environment.jersey().register(userResource);
     }
 }
