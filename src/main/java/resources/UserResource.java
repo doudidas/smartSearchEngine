@@ -1,7 +1,8 @@
-package com.smartSearch;
+package resources;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import entities.User;
 import org.bson.Document;
 
 import javax.ws.rs.*;
@@ -27,15 +28,14 @@ public class UserResource {
 
     @GET
     public List<User> getAllUsers() {
-        this.users = collection.find().map(doc -> docToUser(doc)).into(new ArrayList<>());
+        this.users = collection.find().map(this::docToUser).into(new ArrayList<>());
         return users;
     }
 
     @GET
     @Path("{id}")
     public List<User> getUserByID(@PathParam("id") String id) {
-        List<User> selectedUsers = new ArrayList<>();
-        return selectedUsers;
+        return new ArrayList<>();
     }
 
     @POST
@@ -62,7 +62,8 @@ public class UserResource {
         return new Document()
                 .append("firstName", user.getFirstName())
                 .append("lastName", user.getLastName())
-                .append("email", user.getEmail());
+                .append("email", user.getEmail())
+                .append("topics",user.getTopics());
     }
 
     private User docToUser(Document doc) {
@@ -80,6 +81,6 @@ public class UserResource {
     }
 
     private List<User> getUsersByEmail(String email) {
-        return collection.find(eq("email", email)).map(doc -> docToUser(doc)).into(new ArrayList<>());
+        return collection.find(eq("email", email)).map(this::docToUser).into(new ArrayList<>());
     }
 }

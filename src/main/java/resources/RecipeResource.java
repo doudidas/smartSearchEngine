@@ -1,7 +1,8 @@
-package com.smartSearch;
+package resources;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import entities.Recipe;
 import org.bson.Document;
 
 import javax.ws.rs.*;
@@ -22,7 +23,7 @@ public class RecipeResource {
 
     @GET
     public List<Recipe> getAllRecipes() {
-        this.recipes = collection.find().map(doc -> docToRecipe(doc)).into(new ArrayList<>());
+        this.recipes = collection.find().map(this::docToRecipe).into(new ArrayList<>());
         return recipes;
     }
 
@@ -62,7 +63,7 @@ public class RecipeResource {
         collection.insertOne(recipeToDoc(recipe));
     }
 
-    private final Document recipeToDoc(Recipe recipe) {
+    private Document recipeToDoc(Recipe recipe) {
 
         return new Document()
                 .append("name", recipe.getName())

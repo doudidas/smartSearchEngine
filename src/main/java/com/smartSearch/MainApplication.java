@@ -6,6 +6,8 @@ import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import resources.RecipeResource;
+import resources.UserResource;
 
 import java.net.UnknownHostException;
 

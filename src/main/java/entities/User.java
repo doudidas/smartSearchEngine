@@ -1,4 +1,4 @@
-package com.smartSearch;
+package entities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +28,12 @@ public class User {
         this.email = email;
     }
 
-    public List<String> getObjectives() {
-        return objectives;
+    public List<String> getTopics() {
+        return topics;
     }
 
-    public void setObjectives(List<String> objectives) {
-        this.objectives = objectives;
+    public void setTopics(List<String> topics) {
+        this.topics = topics;
     }
 
     public String getId() {
@@ -48,16 +48,16 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private List<String> objectives = new ArrayList<>();
+    private List<String> topics = new ArrayList<>();
 
     public User () {}
 
-    public User(String id, String firstName, String lastName, String email, List<String> objectives) {
+    public User(String id, String firstName, String lastName, String email, List<String> topics) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.objectives = objectives;
+        this.topics = topics;
     }
 
 }
