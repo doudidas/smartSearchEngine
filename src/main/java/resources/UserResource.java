@@ -33,9 +33,9 @@ public class UserResource {
     }
 
     @GET
-    @Path("{id}")
-    public List<User> getUserByID(@PathParam("id") String id) {
-        return new ArrayList<>();
+    @Path("{email}")
+    public List<User> getByEmail(@PathParam("email") String email) {
+        return getUsersByEmail(email);
     }
 
     @POST
@@ -62,8 +62,8 @@ public class UserResource {
         return new Document()
                 .append("firstName", user.getFirstName())
                 .append("lastName", user.getLastName())
-                .append("email", user.getEmail())
-                .append("topics",user.getTopics());
+                .append("topics",user.getTopics())
+                .append("email", user.getEmail());
     }
 
     private User docToUser(Document doc) {
@@ -72,6 +72,7 @@ public class UserResource {
         user.setFirstName(doc.getString("firstName"));
         user.setLastName(doc.getString("lastName"));
         user.setEmail(doc.getString("email"));
+        user.setTopics((List<String>) doc.get("topics"));
         return user;
     }
 
@@ -82,5 +83,8 @@ public class UserResource {
 
     private List<User> getUsersByEmail(String email) {
         return collection.find(eq("email", email)).map(this::docToUser).into(new ArrayList<>());
+    }
+    private List<User> getUsersById(String id) {
+        return collection.find(eq("_id", id)).map(this::docToUser).into(new ArrayList<>());
     }
 }
