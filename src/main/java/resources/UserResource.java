@@ -43,10 +43,10 @@ public class UserResource {
         try {
             if (! userExist(user.getEmail())) {
                 saveToDB(user);
+                return Response.status(Response.Status.CREATED).build();
             } else {
                 return Response.status(Response.Status.FORBIDDEN).entity("user exist !").build();
             }
-            return Response.status(Response.Status.CREATED).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exeception catched :" + e.toString()).build();
         }
@@ -63,7 +63,8 @@ public class UserResource {
                 .append("firstName", user.getFirstName())
                 .append("lastName", user.getLastName())
                 .append("topics",user.getTopics())
-                .append("email", user.getEmail());
+                .append("email", user.getEmail())
+                .append("departure", user.getDeparture());
     }
 
     private User docToUser(Document doc) {
@@ -72,6 +73,7 @@ public class UserResource {
         user.setFirstName(doc.getString("firstName"));
         user.setLastName(doc.getString("lastName"));
         user.setEmail(doc.getString("email"));
+        user.setDeparture((doc.getString("departure")));
         user.setTopics((List<String>) doc.get("topics"));
         return user;
     }

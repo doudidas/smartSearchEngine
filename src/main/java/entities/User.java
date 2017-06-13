@@ -48,6 +48,16 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
+    }
+
+    private String departure;
     private List<String> topics = new ArrayList<>();
 
     public User () {}
