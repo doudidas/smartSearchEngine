@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import entities.User;
 import org.bson.Document;
+import org.json.simple.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -33,19 +34,25 @@ public class UserResource {
     }
 
     @GET
-    @Path("{email}")
-    public List<User> getByEmail(@PathParam("email") String email) {
-        return getUsersByEmail(email);
+    @Path("{id}")
+    public List<User> getByEmail(@PathParam("id") String id) {
+        return getUsersById(id);
     }
 
     @POST
     public Response postUser(User user) {
         try {
+            JSONObject responseBody;
+            responseBody = new JSONObject();
             if (! userExist(user.getEmail())) {
                 saveToDB(user);
-                return Response.status(Response.Status.CREATED).build();
+                user = getUsersByEmail(user.getEmail()).get(0);
+                responseBody.put("token", user.getId());
+                responseBody.put("message", "user created");
+                return Response.status(Response.Status.CREATED).entity(responseBody).build();
             } else {
-                return Response.status(Response.Status.FORBIDDEN).entity("user exist !").build();
+                responseBody.put("message", "user already exist");
+                return Response.status(Response.Status.FORBIDDEN).entity(responseBody).build();
             }
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exeception catched :" + e.toString()).build();
@@ -53,7 +60,6 @@ public class UserResource {
     }
 
     private void saveToDB(User user) throws NullPointerException {
-
         collection.insertOne(userToDoc(user));
     }
 
