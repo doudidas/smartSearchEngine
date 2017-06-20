@@ -48,6 +48,10 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String gender;
+    private String status;
+    private String departure;
+    private List<String> topics = new ArrayList<>();
 
     public String getDeparture() {
         return departure;
@@ -57,8 +61,7 @@ public class User {
         this.departure = departure;
     }
 
-    private String departure;
-    private List<String> topics = new ArrayList<>();
+
 
     public User () {}
 
@@ -70,4 +73,19 @@ public class User {
         this.topics = topics;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 }

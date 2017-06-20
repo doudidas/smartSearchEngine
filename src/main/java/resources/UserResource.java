@@ -19,23 +19,24 @@ import static com.mongodb.client.model.Filters.eq;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    private final MongoCollection<Document> collection;
+    private final MongoCollection<Document> userCollection;
+    private final MongoCollection<Document> citiesCollection;
     private List<User> users = new ArrayList<>();
 
     public UserResource(MongoDatabase database) {
-
-        this.collection = database.getCollection("userCollection");
+        this.userCollection = database.getCollection("userCollection");
+        this.citiesCollection = database.getCollection("ourCitiesCollection");
     }
 
     @GET
     public List<User> getAllUsers() {
-        this.users = collection.find().map(this::docToUser).into(new ArrayList<>());
+        this.users = userCollection.find().map(UserResource::docToUser).into(new ArrayList<>());
         return users;
     }
 
     @GET
     @Path("{id}")
-    public List<User> getByEmail(@PathParam("id") String id) {
+    public List<User> getById(@PathParam("id") String id) {
         return getUsersById(id);
     }
 
@@ -60,22 +61,25 @@ public class UserResource {
     }
 
     private void saveToDB(User user) throws NullPointerException {
-        collection.insertOne(userToDoc(user));
+        userCollection.insertOne(userToDoc(user));
     }
 
-    private final Document userToDoc(User user) {
-
+    Document userToDoc(User user) {
         return new Document()
                 .append("firstName", user.getFirstName())
                 .append("lastName", user.getLastName())
                 .append("topics",user.getTopics())
                 .append("email", user.getEmail())
+                .append("gender", user.getGender())
+                .append("status", user.getStatus())
                 .append("departure", user.getDeparture());
     }
 
-    private User docToUser(Document doc) {
+    static User docToUser(Document doc) {
         User user = new User();
         user.setId(doc.get("_id").toString());
+        user.setGender(doc.getString("gender"));
+        user.setStatus(doc.getString("status"));
         user.setFirstName(doc.getString("firstName"));
         user.setLastName(doc.getString("lastName"));
         user.setEmail(doc.getString("email"));
@@ -89,10 +93,11 @@ public class UserResource {
         return !userByEmail.isEmpty();
     }
 
-    private List<User> getUsersByEmail(String email) {
-        return collection.find(eq("email", email)).map(this::docToUser).into(new ArrayList<>());
+     List<User> getUsersByEmail(String email) {
+        return userCollection.find(eq("email", email)).map(UserResource::docToUser).into(new ArrayList<>());
     }
-    private List<User> getUsersById(String id) {
-        return collection.find(eq("_id", id)).map(this::docToUser).into(new ArrayList<>());
+     List<User> getUsersById(String id) {
+        return userCollection.find(eq("_id", id)).map(UserResource::docToUser).into(new ArrayList<>());
     }
+
 }

@@ -6,6 +6,7 @@ import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import resources.DestinationResource;
 import resources.UserResource;
 
 import java.net.UnknownHostException;
@@ -36,6 +37,9 @@ public class MainApplication extends Application<MainConfiguration> {
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
         final UserResource userResource = new UserResource(database);
+        final DestinationResource destinationResource = new DestinationResource(database);
+
         environment.jersey().register(userResource);
+        environment.jersey().register(destinationResource);
     }
 }
