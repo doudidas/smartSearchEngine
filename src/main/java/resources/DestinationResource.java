@@ -5,6 +5,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import entities.City;
 import entities.User;
+import org.bson.BsonDocument;
+import org.bson.BsonJavaScript;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
@@ -23,9 +25,11 @@ import static com.mongodb.client.model.Filters.eq;
 public class DestinationResource {
     private final MongoCollection<Document> userCollection;
     private final MongoCollection<Document> citiesCollection;
+    private final MongoDatabase database;
     private List<User> users = new ArrayList<>();
 
     public DestinationResource(MongoDatabase database) {
+        this.database =  database;
         this.userCollection = database.getCollection("userCollection");
         this.citiesCollection = database.getCollection("ourCitiesCollection");
     }
@@ -36,7 +40,15 @@ public class DestinationResource {
         JSONArray cities = citiesCollection.find().map(this::docToCity).into(new JSONArray());
         return  Response.status(Response.Status.ACCEPTED).entity(cities).build();
     }
+    @GET
+    @Path("random")
+    public Response getRandomDestination() {
+       BsonDocument getRandom = new BsonDocument("value",
+                new BsonJavaScript("function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
+       Document doc1 = database.runCommand(new Document("$eval", "getRandom()"));
 
+       return  Response.status(Response.Status.ACCEPTED).entity(doc1.toJson()).build();
+    }
     @GET
     @Path("{id}")
     public Response getDestinationById(@PathParam("id") String id) {

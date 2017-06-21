@@ -34,7 +34,6 @@ public class MainApplication extends Application<MainConfiguration> {
     public void run(MainConfiguration mainConfiguration, Environment environment) throws UnknownHostException {
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         MongoDatabase database = mongoClient.getDatabase("SmartSearchDatabase");
-
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
         final UserResource userResource = new UserResource(database);
         final DestinationResource destinationResource = new DestinationResource(database);
