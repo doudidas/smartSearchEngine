@@ -105,8 +105,5 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-assets:1.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.4.2" level="project" />
-    <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.0.0-M4" level="project" />
-    <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.0.0-M2" level="project" />
-    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.0.0-M4" level="project" />
   </component>
 </module>
