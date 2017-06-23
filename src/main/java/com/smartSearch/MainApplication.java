@@ -8,6 +8,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import resources.DestinationResource;
+import resources.TopicResource;
 import resources.UserResource;
 
 import javax.servlet.DispatcherType;
@@ -53,8 +54,10 @@ public class MainApplication extends Application<MainConfiguration> {
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
         final UserResource userResource = new UserResource(database);
         final DestinationResource destinationResource = new DestinationResource(database);
+        final TopicResource topicResource = new TopicResource(database);
 
         environment.jersey().register(userResource);
+        environment.jersey().register(topicResource);
         environment.jersey().register(destinationResource);
     }
 }

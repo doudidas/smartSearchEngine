@@ -26,7 +26,6 @@ public class DestinationResource {
     private final MongoCollection<Document> userCollection;
     private final MongoCollection<Document> citiesCollection;
     private final MongoDatabase database;
-    private List<User> users = new ArrayList<>();
 
     public DestinationResource(MongoDatabase database) {
         this.database =  database;
@@ -90,15 +89,7 @@ public class DestinationResource {
     }
     }
 
-    private final Document userToDoc(City city) {
-        return new Document()
-                .append("id", city.getId())
-                .append("name", city.getName())
-                .append("topics",city.getTopics())
-                .append("description", city.getDescription());
-    }
-
-    private final City docToCity(Document doc ) {
+    private City docToCity(Document doc ) {
         City city = new City();
         city.setId(doc.get("_id").toString());
         city.setName(doc.getString("name"));
