@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/smartSearch.iml" filepath="$PROJECT_DIR$/smartSearch.iml" />
-      <module fileurl="file://$USER_HOME$/smartSearch/smartSearch/smartSearch.iml" filepath="$USER_HOME$/smartSearch/smartSearch/smartSearch.iml" />
-    </modules>
-  </component>
-</project>
