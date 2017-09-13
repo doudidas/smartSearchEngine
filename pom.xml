@@ -37,6 +37,9 @@
         </dependency>
     </dependencies>
     <build>
+       <defaultGoal>install</defaultGoal>
+        <directory>${basedir}/target</directory>
+        <finalName>API</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
