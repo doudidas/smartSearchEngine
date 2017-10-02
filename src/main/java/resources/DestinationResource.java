@@ -1,21 +1,27 @@
 package resources;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 import entities.City;
 import entities.User;
 import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarEntry;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -42,10 +48,30 @@ public class DestinationResource {
     @GET
     @Path("random")
     public Response getRandomDestination() {
+/*
        BsonDocument getRandom = new BsonDocument("value",
                 new BsonJavaScript("function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
-       Document doc1 = database.runCommand(new Document("$eval", "getRandom()"));
+       Document doc1 = database.users.aggregate(
+               [ { $sample: { size: 3 } } ]
+)
+        Document doc1 = database.runCommand(new Document());
+    System.out.println(randomElement);
+    */
+        MongoDatabase mdb = database;
+/* run this <code snippet> in bootstrap */
+        BsonDocument randomFunction = new BsonDocument("value",
+                new BsonJavaScript("function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
 
+        mdb.getCollection("system.js").updateOne(
+                new Document("_id", "random"),
+                new Document("$set", randomFunction),
+                new UpdateOptions().upsert(true));
+
+        mdb.runCommand(new Document("$eval", "db.loadServerScripts()"));
+/* end </code snippet> */
+
+        Document doc1 = mdb.runCommand(new Document("$eval", "random()"));
+        System.out.println(doc1);
        return  Response.status(Response.Status.ACCEPTED).entity(doc1.toJson()).build();
     }
     @GET
