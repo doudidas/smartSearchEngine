@@ -49,7 +49,7 @@ public class MainApplication extends Application<MainConfiguration> {
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-        MongoClient mongoClient = new MongoClient("mongo-server.lab.local", 27017);
+        MongoClient mongoClient = new MongoClient(System.getenv("MONGOPATH"), 27017);
         MongoDatabase database = mongoClient.getDatabase("SmartSearchDatabase");
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
         final UserResource userResource = new UserResource(database);
