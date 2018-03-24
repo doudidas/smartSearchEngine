@@ -1,27 +1,30 @@
 package resources;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import entities.City;
 import entities.User;
+import java.util.ArrayList;
+import java.util.jar.JarEntry;
+import java.util.List;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
-import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.jar.JarEntry;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -34,50 +37,50 @@ public class DestinationResource {
     private final MongoDatabase database;
 
     public DestinationResource(MongoDatabase database) {
-        this.database =  database;
+        this.database = database;
         this.userCollection = database.getCollection("userCollection");
         this.citiesCollection = database.getCollection("ourCitiesCollection");
     }
 
-
     @GET
     public Response getAllDestination() {
         JSONArray cities = citiesCollection.find().map(this::docToCity).into(new JSONArray());
-        return  Response.status(Response.Status.ACCEPTED).entity(cities).build();
+        return Response.status(Response.Status.ACCEPTED).entity(cities).build();
     }
+
     @GET
     @Path("random")
     public Response getRandomDestination() {
-/*
-       BsonDocument getRandom = new BsonDocument("value",
+        /*
+               BsonDocument getRandom = new BsonDocument("value",
                 new BsonJavaScript("function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
-       Document doc1 = database.users.aggregate(
+               Document doc1 = database.users.aggregate(
                [ { $sample: { size: 3 } } ]
-)
+        )
         Document doc1 = database.runCommand(new Document());
-    System.out.println(randomElement);
-    */
+            System.out.println(randomElement);
+            */
         MongoDatabase mdb = database;
-/* run this <code snippet> in bootstrap */
-        BsonDocument randomFunction = new BsonDocument("value",
-                new BsonJavaScript("function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
+        /* run this <code snippet> in bootstrap */
+        BsonDocument randomFunction = new BsonDocument("value", new BsonJavaScript(
+                "function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
 
-        mdb.getCollection("system.js").updateOne(
-                new Document("_id", "random"),
-                new Document("$set", randomFunction),
+        mdb.getCollection("system.js").updateOne(new Document("_id", "random"), new Document("$set", randomFunction),
                 new UpdateOptions().upsert(true));
 
         mdb.runCommand(new Document("$eval", "db.loadServerScripts()"));
-/* end </code snippet> */
+        /* end </code snippet> */
 
         Document doc1 = mdb.runCommand(new Document("$eval", "random()"));
         System.out.println(doc1);
-       return  Response.status(Response.Status.ACCEPTED).entity(doc1.toJson()).build();
+        return Response.status(Response.Status.ACCEPTED).entity(doc1.toJson()).build();
     }
+
     @GET
     @Path("{id}")
     public Response getDestinationById(@PathParam("id") String id) {
-        JSONArray result = citiesCollection.find(eq("_id",  new ObjectId(id))).map(this::docToCity).into(new JSONArray());
+        JSONArray result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity)
+                .into(new JSONArray());
         if (result.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
@@ -89,33 +92,34 @@ public class DestinationResource {
     @GET
     @Path("user/{id}")
     public Response getDestinationByUser(@PathParam("id") String id) {
-    try {
-        JSONArray result = new JSONArray();
+        try {
+            JSONArray result = new JSONArray();
 
-        User user = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser).into(new ArrayList<>()).get(0);
-        result.add(user);
+            User user = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser)
+                    .into(new ArrayList<>()).get(0);
+            result.add(user);
 
-        BasicDBObject inQuery = new BasicDBObject();
-        List<Integer> list = new ArrayList<>();
+            BasicDBObject inQuery = new BasicDBObject();
+            List<Integer> list = new ArrayList<>();
 
-        for (String elem : user.getTopics()) {
-            list.add(Integer.parseInt(elem));
+            for (String elem : user.getTopics()) {
+                list.add(Integer.parseInt(elem));
+            }
+
+            inQuery.put("topics", new BasicDBObject("$in", list));
+            JSONArray cities = citiesCollection.find(inQuery).map(this::docToCity).into(new JSONArray());
+            if (cities.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            result.add(cities);
+            return Response.status(Response.Status.ACCEPTED).entity(result).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getStackTrace()).build();
         }
-
-        inQuery.put("topics", new BasicDBObject("$in", list));
-        JSONArray cities = citiesCollection.find(inQuery).map(this::docToCity).into(new JSONArray());
-        if (cities.isEmpty()){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        result.add(cities);
-        return Response.status(Response.Status.ACCEPTED).entity(result).build();
-
-    } catch (Exception e) {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getStackTrace()).build();
-    }
     }
 
-    private City docToCity(Document doc ) {
+    private City docToCity(Document doc) {
         City city = new City();
         city.setId(doc.get("_id").toString());
         city.setName(doc.getString("name"));

@@ -61,9 +61,7 @@ public class User {
         this.departure = departure;
     }
 
-
-
-    public User () {
+    public User() {
         topics = new ArrayList<>();
     }
 

@@ -1,7 +1,7 @@
 package entities;
 
 public class Topic {
-    private String name,id;
+    private String name, id;
 
     public Topic() {
     }

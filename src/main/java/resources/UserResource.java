@@ -3,14 +3,18 @@ package resources;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import entities.User;
-import org.bson.Document;
-import org.json.simple.JSONObject;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import org.bson.Document;
+import org.json.simple.JSONObject;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -45,7 +49,7 @@ public class UserResource {
         try {
             JSONObject responseBody;
             responseBody = new JSONObject();
-            if (! userExist(user.getEmail())) {
+            if (!userExist(user.getEmail())) {
                 saveToDB(user);
                 user = getUsersByEmail(user.getEmail()).get(0);
                 responseBody.put("token", user.getId());
@@ -56,7 +60,8 @@ public class UserResource {
                 return Response.status(Response.Status.FORBIDDEN).entity(responseBody).build();
             }
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exeception catched :" + e.toString()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exeception catched :" + e.toString())
+                    .build();
         }
     }
 
@@ -65,14 +70,9 @@ public class UserResource {
     }
 
     Document userToDoc(User user) {
-        return new Document()
-                .append("firstName", user.getFirstName())
-                .append("lastName", user.getLastName())
-                .append("topics",user.getTopics())
-                .append("email", user.getEmail())
-                .append("gender", user.getGender())
-                .append("status", user.getStatus())
-                .append("departure", user.getDeparture());
+        return new Document().append("firstName", user.getFirstName()).append("lastName", user.getLastName())
+                .append("topics", user.getTopics()).append("email", user.getEmail()).append("gender", user.getGender())
+                .append("status", user.getStatus()).append("departure", user.getDeparture());
     }
 
     static User docToUser(Document doc) {
@@ -93,10 +93,11 @@ public class UserResource {
         return !userByEmail.isEmpty();
     }
 
-     List<User> getUsersByEmail(String email) {
+    List<User> getUsersByEmail(String email) {
         return userCollection.find(eq("email", email)).map(UserResource::docToUser).into(new ArrayList<>());
     }
-     List<User> getUsersById(String id) {
+
+    List<User> getUsersById(String id) {
         return userCollection.find(eq("_id", id)).map(UserResource::docToUser).into(new ArrayList<>());
     }
 

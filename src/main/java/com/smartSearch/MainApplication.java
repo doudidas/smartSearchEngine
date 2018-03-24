@@ -10,7 +10,7 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import resources.DestinationResource;
 import resources.TopicResource;
 import resources.UserResource;
-
+import resources.DefaultResource;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import java.net.UnknownHostException;
@@ -18,7 +18,8 @@ import java.util.EnumSet;
 
 public class MainApplication extends Application<MainConfiguration> {
 
-    public MainApplication() {}
+    public MainApplication() {
+    }
 
     public static void main(String[] args) throws Exception {
         new MainApplication().run(args);
@@ -38,8 +39,7 @@ public class MainApplication extends Application<MainConfiguration> {
     @Override
     public void run(MainConfiguration mainConfiguration, Environment environment) throws UnknownHostException {
         // Enable CORS headers
-        final FilterRegistration.Dynamic cors =
-                environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+        final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 
         // Configure CORS parameters
         cors.setInitParameter("allowedOrigins", "*");
@@ -55,7 +55,8 @@ public class MainApplication extends Application<MainConfiguration> {
         final UserResource userResource = new UserResource(database);
         final DestinationResource destinationResource = new DestinationResource(database);
         final TopicResource topicResource = new TopicResource(database);
-
+        final DefaultResource defaultResource = new DefaultResource(database);
+        environment.jersey().register(defaultResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
         environment.jersey().register(destinationResource);

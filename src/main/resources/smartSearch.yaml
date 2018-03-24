@@ -1,8 +1,6 @@
 message: Hi
 
 server:
-
-server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000
   applicationConnectors:
