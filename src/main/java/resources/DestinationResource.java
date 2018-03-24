@@ -51,15 +51,6 @@ public class DestinationResource {
     @GET
     @Path("random")
     public Response getRandomDestination() {
-        /*
-               BsonDocument getRandom = new BsonDocument("value",
-                new BsonJavaScript("function(){return db.getCollection('ourCitiesCollection').aggregate([{$sample : { size : 8 }}]);}"));
-               Document doc1 = database.users.aggregate(
-               [ { $sample: { size: 3 } } ]
-        )
-        Document doc1 = database.runCommand(new Document());
-            System.out.println(randomElement);
-            */
         MongoDatabase mdb = database;
         /* run this <code snippet> in bootstrap */
         BsonDocument randomFunction = new BsonDocument("value", new BsonJavaScript(
@@ -79,8 +70,7 @@ public class DestinationResource {
     @GET
     @Path("{id}")
     public Response getDestinationById(@PathParam("id") String id) {
-        JSONArray result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity)
-                .into(new JSONArray());
+        JSONArray result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity).into(new JSONArray());
         if (result.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {

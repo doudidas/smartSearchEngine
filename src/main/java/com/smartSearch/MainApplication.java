@@ -15,6 +15,8 @@ import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import java.net.UnknownHostException;
 import java.util.EnumSet;
+import java.lang.System;
+import java.lang.Error;
 
 public class MainApplication extends Application<MainConfiguration> {
 
@@ -48,17 +50,30 @@ public class MainApplication extends Application<MainConfiguration> {
 
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        String mongoAdress = (System.getenv("MONGO_PORT_27017_TCP_ADDR") == null) ? "localhost": System.getenv("MONGO_PORT_27017_TCP_ADDR");
 
-        MongoClient mongoClient = new MongoClient(System.getenv("MONGO_PORT_27017_TCP_ADDR"), 27017);
-        MongoDatabase database = mongoClient.getDatabase("SmartSearchDatabase");
+        MongoClient mongoClient = new MongoClient(mongoAdress, 27017);
+        MongoDatabase database;
+        try {
+            database = mongoClient.getDatabase("SmartSearchDatabase");
+        } catch(Exception e) {
+            throw new Error("Impossible to connect to database !! " + e);
+        }
+
+        
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
         final UserResource userResource = new UserResource(database);
         final DestinationResource destinationResource = new DestinationResource(database);
         final TopicResource topicResource = new TopicResource(database);
-        final DefaultResource defaultResource = new DefaultResource(database);
-        environment.jersey().register(defaultResource);
+
+        environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-        environment.jersey().register(destinationResource);
+        try {
+            final DefaultResource defaultResource = new DefaultResource();
+            environment.jersey().register(defaultResource);
+        } catch (Exception e) {
+            System.out.println("Fail to load Default Resource " + e);
+        }
     }
 }

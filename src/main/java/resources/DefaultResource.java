@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import org.json.simple.JSONObject;
 
-@Path("/")
+@Path("")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DefaultResource {
@@ -28,7 +28,6 @@ public class DefaultResource {
         this.description.put("user", this.userDescription);
         this.description.put("topic", this.topicDescription);
         this.description.put("destination", this.destinationDescription);
-
     }
 
     @GET
