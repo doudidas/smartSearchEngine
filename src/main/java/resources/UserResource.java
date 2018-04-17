@@ -18,7 +18,7 @@ import org.json.simple.JSONObject;
 
 import static com.mongodb.client.model.Filters.eq;
 
-@Path("/users")
+@Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -39,7 +39,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/user/{id}")
+    @Path("{id}")
     public List<User> getById(@PathParam("id") String id) {
         return getUsersById(id);
     }
