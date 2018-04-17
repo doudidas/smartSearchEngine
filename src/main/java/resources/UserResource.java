@@ -44,6 +44,22 @@ public class UserResource {
         return getUsersById(id);
     }
 
+    @DELETE
+    @PATH("{id}")
+    public Response deleteUserById(@PathParam("id") String id) {
+      List<User> users = getUsersById(id);
+      if (users.length == 0) {
+        return Response.status(Response.Status.NOT_FOUND).entity("No user found for this id").build();
+      } else {
+        try {
+          removeUserById(users[0]);
+          return Response.status(Response.Status.DELETE).entity({"message" : "user deleted !"}).build();
+        }
+      }
+      JSONObject responseBody;
+      responseBody = new JSONObject();
+    }
+
     @POST
     public Response postUser(User user) {
         try {
@@ -99,6 +115,10 @@ public class UserResource {
 
     List<User> getUsersById(String id) {
         return userCollection.find(eq("_id", id)).map(UserResource::docToUser).into(new ArrayList<>());
+    }
+
+    WriteResult removeUser(String id) {
+
     }
 
 }
