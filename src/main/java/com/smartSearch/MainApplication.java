@@ -7,20 +7,18 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import resources.DefaultResource;
 import resources.DestinationResource;
 import resources.TopicResource;
 import resources.UserResource;
-import resources.DefaultResource;
+
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
-import java.net.UnknownHostException;
 import java.util.EnumSet;
-import java.lang.System;
-import java.lang.Error;
 
 public class MainApplication extends Application<MainConfiguration> {
 
-    public MainApplication() {
+    private MainApplication() {
     }
 
     public static void main(String[] args) throws Exception {
@@ -39,7 +37,7 @@ public class MainApplication extends Application<MainConfiguration> {
     }
 
     @Override
-    public void run(MainConfiguration mainConfiguration, Environment environment) throws UnknownHostException {
+    public void run(MainConfiguration mainConfiguration, Environment environment) {
         // Enable CORS headers
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 

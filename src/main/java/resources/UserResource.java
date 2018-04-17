@@ -1,20 +1,20 @@
 package resources;
 
+import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import entities.User;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.Consumes;
+import org.bson.BsonDocument;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.json.simple.JSONObject;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import org.bson.Document;
-import org.json.simple.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -40,34 +40,38 @@ public class UserResource {
 
     @GET
     @Path("{id}")
-    public List<User> getById(@PathParam("id") String id) {
-        return getUsersById(id);
+    public User getById(@PathParam("id") String id) {
+        return getUserById(id);
     }
 
     @DELETE
-    @PATH("{id}")
+    @Path("{id}")
     public Response deleteUserById(@PathParam("id") String id) {
-      List<User> users = getUsersById(id);
-      if (users.length == 0) {
-        return Response.status(Response.Status.NOT_FOUND).entity("No user found for this id").build();
-      } else {
-        try {
-          removeUserById(users[0]);
-          return Response.status(Response.Status.DELETE).entity({"message" : "user deleted !"}).build();
+        JSONObject responseBody;
+        responseBody = new JSONObject();
+        User user = getUserById(id);
+        if (user == null) {
+            responseBody.put("message", "No user found for this id");
+            return Response.status(Response.Status.NOT_FOUND).entity(responseBody).build();
+        } else try {
+            boolean result = removeUser(userToDoc(user));
+            responseBody.put("message", result);
+            return Response.status(Response.Status.ACCEPTED).entity(responseBody).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseBody.put("message", "Exception : " + e.toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseBody).build();
         }
-      }
-      JSONObject responseBody;
-      responseBody = new JSONObject();
     }
 
     @POST
     public Response postUser(User user) {
+        JSONObject responseBody;
+        responseBody = new JSONObject();
         try {
-            JSONObject responseBody;
-            responseBody = new JSONObject();
             if (!userExist(user.getEmail())) {
                 saveToDB(user);
-                user = getUsersByEmail(user.getEmail()).get(0);
+                user = getUserByEmail(user.getEmail());
                 responseBody.put("token", user.getId());
                 responseBody.put("message", "user created");
                 return Response.status(Response.Status.CREATED).entity(responseBody).build();
@@ -76,8 +80,8 @@ public class UserResource {
                 return Response.status(Response.Status.FORBIDDEN).entity(responseBody).build();
             }
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exeception catched :" + e.toString())
-                    .build();
+            responseBody.put("message", "Exeception catched :" + e.toString());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseBody).build();
         }
     }
 
@@ -105,20 +109,33 @@ public class UserResource {
     }
 
     private Boolean userExist(String email) {
-        List<User> userByEmail = getUsersByEmail(email);
-        return !userByEmail.isEmpty();
+        User userByEmail = getUserByEmail(email);
+        return userByEmail != null;
     }
 
-    List<User> getUsersByEmail(String email) {
-        return userCollection.find(eq("email", email)).map(UserResource::docToUser).into(new ArrayList<>());
+    User getUserByEmail(String email) {
+        users = userCollection.find(eq("email", email)).map(UserResource::docToUser).into(new ArrayList<>());
+        return (users.size() == 1) ? users.get(0) : null;
     }
 
-    List<User> getUsersById(String id) {
-        return userCollection.find(eq("_id", id)).map(UserResource::docToUser).into(new ArrayList<>());
+    User getUserById(String id) {
+        users = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser).into(new ArrayList<>());
+        return (users.size() == 1) ? users.get(0) : null;
     }
 
-    WriteResult removeUser(String id) {
-
+    boolean removeUser(Document user) throws Exception {
+        BsonDocument userToRemove;
+        DeleteResult result;
+        userToRemove = user.toBsonDocument(User.class, MongoClient.getDefaultCodecRegistry());
+        try {
+            result = userCollection.deleteOne(userToRemove);
+        } catch (Exception e) {
+            throw new Exception("Failed to delete user on database" + e);
+        }
+        if (result.getDeletedCount() != 1) {
+            throw new Exception("Error while deleting user in database ! " + result.toString());
+        }
+        return ok;
     }
 
 }

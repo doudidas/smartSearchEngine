@@ -1,30 +1,22 @@
 package resources;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.model.UpdateOptions;
 import entities.City;
 import entities.User;
-import java.util.ArrayList;
-import java.util.jar.JarEntry;
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
-import org.bson.conversions.Bson;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
