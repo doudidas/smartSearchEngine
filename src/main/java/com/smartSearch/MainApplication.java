@@ -54,7 +54,7 @@ public class MainApplication extends Application<MainConfiguration> {
 
         MongoClient mongoClient;
         MongoDatabase database;
-        
+
         try {
             mongoClient = new MongoClient(mongoAdress, 27017);
             database = mongoClient.getDatabase("SmartSearchDatabase");

@@ -39,7 +39,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/user/{id}")
     public List<User> getById(@PathParam("id") String id) {
         return getUsersById(id);
     }
