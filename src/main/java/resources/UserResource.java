@@ -135,7 +135,7 @@ public class UserResource {
         if (result.getDeletedCount() != 1) {
             throw new Exception("Error while deleting user in database ! " + result.toString());
         }
-        return ok;
+        return true;
     }
 
 }
