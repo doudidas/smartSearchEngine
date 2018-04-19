@@ -60,20 +60,16 @@ public class MainApplication extends Application<MainConfiguration> {
             throw new Error("Impossible to connect to database !! " + e);
         }
 
-
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
-        final UserResource userResource = new UserResource(database);
+
+        final UserResource userResource               = new UserResource(database);
+        final TopicResource topicResource             = new TopicResource(database);
+        final DefaultResource defaultResource         = new DefaultResource();
         final DestinationResource destinationResource = new DestinationResource(database);
-        final TopicResource topicResource = new TopicResource(database);
 
         environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-        try {
-            final DefaultResource defaultResource = new DefaultResource();
-            environment.jersey().register(defaultResource);
-        } catch (Exception e) {
-            System.out.println("Fail to load Default Resource " + e);
-        }
+        environment.jersey().register(defaultResource);
     }
 }
