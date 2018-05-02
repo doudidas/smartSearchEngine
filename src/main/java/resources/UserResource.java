@@ -24,12 +24,12 @@ import static com.mongodb.client.model.Filters.eq;
 public class UserResource {
 
     private final MongoCollection<Document> userCollection;
-    private final MongoCollection<Document> citiesCollection;
+   // private final MongoCollection<Document> citiesCollection;
     private List<User> users = new ArrayList<>();
 
     public UserResource(MongoDatabase database) {
         this.userCollection = database.getCollection("userCollection");
-        this.citiesCollection = database.getCollection("ourCitiesCollection");
+     //   this.citiesCollection = database.getCollection("ourCitiesCollection");
     }
 
     @GET
@@ -135,7 +135,7 @@ public class UserResource {
         if (result.getDeletedCount() != 1) {
             throw new Exception("Error while deleting user in database ! " + result.toString());
         }
-        return ok;
+        return true;
     }
 
 }

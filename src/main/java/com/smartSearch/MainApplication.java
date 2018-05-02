@@ -54,7 +54,7 @@ public class MainApplication extends Application<MainConfiguration> {
         MongoDatabase database;
 
         try {
-            mongoClient = new MongoClient(mongoAdress, 27017);
+            mongoClient = new MongoClient("mongo", 27017);
             database = mongoClient.getDatabase("SmartSearchDatabase");
         } catch(Exception e) {
             throw new Error("Impossible to connect to database !! " + e);
