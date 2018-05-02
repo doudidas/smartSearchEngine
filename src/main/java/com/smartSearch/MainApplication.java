@@ -37,7 +37,7 @@ public class MainApplication extends Application<MainConfiguration> {
     }
 
     @Override
-    public void run(MainConfiguration mainConfiguration, Environment environment) {
+    public void run(MainConfiguration mainConfiguration, Environment environment) throws Exception {
         // Enable CORS headers
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 
@@ -48,17 +48,12 @@ public class MainApplication extends Application<MainConfiguration> {
 
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-        String mongoAdress = (System.getenv("MONGO_PORT_27017_TCP_ADDR") == null) ? "localhost": System.getenv("MONGO_PORT_27017_TCP_ADDR");
-
         MongoClient mongoClient;
         MongoDatabase database;
 
-        try {
-            mongoClient = new MongoClient("mongo", 27017);
-            database = mongoClient.getDatabase("SmartSearchDatabase");
-        } catch(Exception e) {
-            throw new Error("Impossible to connect to database !! " + e);
-        }
+        mongoClient = new MongoClient("mongo", 27017);
+        database = mongoClient.getDatabase("SmartSearchDatabase");
+
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
 
