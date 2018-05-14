@@ -24,12 +24,12 @@ import static com.mongodb.client.model.Filters.eq;
 public class UserResource {
 
     private final MongoCollection<Document> userCollection;
-    private final MongoCollection<Document> citiesCollection;
+   // private final MongoCollection<Document> citiesCollection;
     private List<User> users = new ArrayList<>();
 
     public UserResource(MongoDatabase database) {
         this.userCollection = database.getCollection("userCollection");
-        this.citiesCollection = database.getCollection("ourCitiesCollection");
+     //   this.citiesCollection = database.getCollection("ourCitiesCollection");
     }
 
     @GET
