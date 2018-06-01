@@ -11,7 +11,7 @@ COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 
 # Creation of the jar file
-RUN mvn clean package
+RUN mvn package
 
 # Move the jar
 RUN mv ./target/API.jar ./API.jar
@@ -24,6 +24,12 @@ RUN mvn clean
 
 # Clean other files
 RUN rm -rf DockerFile README.md	pom.xml src
+
+
+#Set environnement variable
+
+ARG defaultValue=true
+ENV run_on_container=$bdefaultValue
 
 EXPOSE 9000
 

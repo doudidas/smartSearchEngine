@@ -49,21 +49,20 @@ public class MainApplication extends Application<MainConfiguration> {
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         MongoClient mongoClient;
         MongoDatabase database;
-
-        mongoClient = new MongoClient("localhost", 27017);
+        String hostname = (System.getenv("run_on_container") == "true") ? "mongo" : "localhost";
+        mongoClient = new MongoClient(hostname, 27017);
         database = mongoClient.getDatabase("SmartSearchDatabase");
-
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
 
-        final UserResource userResource               = new UserResource(database);
-        final TopicResource topicResource             = new TopicResource(database);
-     //   final AnalyseResource analyseResource         = new AnalyseResource();
+        final UserResource userResource = new UserResource(database);
+        final TopicResource topicResource = new TopicResource(database);
+        // final AnalyseResource analyseResource = new AnalyseResource();
         final DestinationResource destinationResource = new DestinationResource(database);
 
         environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-      //  environment.jersey().register(analyseResource);
+        // environment.jersey().register(analyseResource);
     }
 }
