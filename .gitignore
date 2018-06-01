@@ -1,3 +1,6 @@
 target/
 /.idea/
 /data/.idea/
+.idea/
+.vscode/
+.settings/
