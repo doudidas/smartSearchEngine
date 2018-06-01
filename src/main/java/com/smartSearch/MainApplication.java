@@ -7,7 +7,6 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import resources.DefaultResource;
 import resources.DestinationResource;
 import resources.TopicResource;
 import resources.UserResource;
@@ -37,7 +36,7 @@ public class MainApplication extends Application<MainConfiguration> {
     }
 
     @Override
-    public void run(MainConfiguration mainConfiguration, Environment environment) throws Exception {
+    public void run(MainConfiguration mainConfiguration, Environment environment) {
         // Enable CORS headers
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 
@@ -51,7 +50,7 @@ public class MainApplication extends Application<MainConfiguration> {
         MongoClient mongoClient;
         MongoDatabase database;
 
-        mongoClient = new MongoClient("mongo", 27017);
+        mongoClient = new MongoClient("localhost", 27017);
         database = mongoClient.getDatabase("SmartSearchDatabase");
 
 
@@ -59,12 +58,12 @@ public class MainApplication extends Application<MainConfiguration> {
 
         final UserResource userResource               = new UserResource(database);
         final TopicResource topicResource             = new TopicResource(database);
-        final DefaultResource defaultResource         = new DefaultResource();
+     //   final AnalyseResource analyseResource         = new AnalyseResource();
         final DestinationResource destinationResource = new DestinationResource(database);
 
         environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-        environment.jersey().register(defaultResource);
+      //  environment.jersey().register(analyseResource);
     }
 }
