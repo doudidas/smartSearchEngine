@@ -15,7 +15,9 @@ public class City {
     public void setTopics(List<Integer> topics) {
         this.topics = topics;
     }
-
+    public void addTopic(Integer topics) {
+        this.topics.add(topics);
+    }
     public void setDescription(String description) {
         this.description = description;
     }

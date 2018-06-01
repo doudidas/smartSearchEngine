@@ -49,7 +49,7 @@ public class MainApplication extends Application<MainConfiguration> {
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         MongoClient mongoClient;
         MongoDatabase database;
-        String hostname = (System.getenv("run_on_container") == "true") ? "mongo" : "localhost";
+        String hostname = (System.getenv("CONTAINER") != null) ? "mongo" : "localhost";
         mongoClient = new MongoClient(hostname, 27017);
         database = mongoClient.getDatabase("SmartSearchDatabase");
 
