@@ -6,8 +6,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import entities.City;
 import entities.User;
-import entities.Topic;
-import java.util.Arrays;
 import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
 import org.bson.Document;
