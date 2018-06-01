@@ -6,17 +6,18 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import entities.City;
 import entities.User;
+import entities.Topic;
+import java.util.Arrays;
 import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.json.simple.JSONArray;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -36,7 +37,8 @@ public class DestinationResource {
 
     @GET
     public Response getAllDestination() {
-        JSONArray cities = citiesCollection.find().map(this::docToCity).into(new JSONArray());
+        ArrayList<City> cities = citiesCollection.find().map(this::docToCity).into(new ArrayList<City>());
+       // JSONArray cities = citiesCollection.find().map(this::docToCity).into(new JSONArray());
         return Response.status(Response.Status.ACCEPTED).entity(cities).build();
     }
 
@@ -62,7 +64,7 @@ public class DestinationResource {
     @GET
     @Path("{id}")
     public Response getDestinationById(@PathParam("id") String id) {
-        JSONArray result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity).into(new JSONArray());
+        List<City> result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity).into(new ArrayList<City>());
         if (result.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
@@ -75,12 +77,9 @@ public class DestinationResource {
     @Path("user/{id}")
     public Response getDestinationByUser(@PathParam("id") String id) {
         try {
-            JSONArray result = new JSONArray();
-
-            User user = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser)
-                    .into(new ArrayList<>()).get(0);
-            result.add(user);
-
+            Object[] result = new Object[2];
+            User user = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser).into(new ArrayList<User>()).get(0);
+            result[0] = user;
             BasicDBObject inQuery = new BasicDBObject();
             List<Integer> list = new ArrayList<>();
 
@@ -89,11 +88,11 @@ public class DestinationResource {
             }
 
             inQuery.put("topics", new BasicDBObject("$in", list));
-            JSONArray cities = citiesCollection.find(inQuery).map(this::docToCity).into(new JSONArray());
+            ArrayList<City> cities = citiesCollection.find(inQuery).map(this::docToCity).into(new ArrayList<City>());
             if (cities.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
-            result.add(cities);
+            result[1] = cities;
             return Response.status(Response.Status.ACCEPTED).entity(result).build();
 
         } catch (Exception e) {

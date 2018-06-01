@@ -4,7 +4,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import entities.Topic;
 import org.bson.Document;
-import org.json.simple.JSONArray;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 @Path("/topic")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,7 +25,7 @@ public class TopicResource {
 
     @GET
     public Response getAllTopics() {
-        JSONArray topics = topicCollection.find().map(this::docToTopic).into(new JSONArray());
+        ArrayList<Topic> topics = topicCollection.find().map(this::docToTopic).into(new ArrayList<Topic>());
         return Response.status(Response.Status.ACCEPTED).entity(topics).build();
     }
 
