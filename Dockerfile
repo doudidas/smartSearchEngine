@@ -28,8 +28,7 @@ RUN rm -rf DockerFile README.md	pom.xml src
 
 #Set environnement variable
 
-ARG defaultValue=true
-ENV run_on_container=$bdefaultValue
+ENV CONTAINER=true
 
 EXPOSE 9000
 
