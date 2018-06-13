@@ -1,19 +1,23 @@
 package com.smartSearch;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 import resources.DestinationResource;
 import resources.TopicResource;
+import resources.HelloResource;
 import resources.UserResource;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import java.util.EnumSet;
 
 public class MainApplication extends Application<MainConfiguration> {
 
@@ -59,10 +63,10 @@ public class MainApplication extends Application<MainConfiguration> {
         final TopicResource topicResource = new TopicResource(database);
         // final AnalyseResource analyseResource = new AnalyseResource();
         final DestinationResource destinationResource = new DestinationResource(database);
-
+        final HelloResource helloResource = new HelloResource();
         environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-        // environment.jersey().register(analyseResource);
+         environment.jersey().register(helloResource);
     }
 }
