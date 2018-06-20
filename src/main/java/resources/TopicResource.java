@@ -31,18 +31,19 @@ public class TopicResource {
         return Response.status(Response.Status.ACCEPTED).entity(topics).build();
     }
 
+    @GET
+    @Path("{id}")
+    public Response getById(@PathParam("id") String id) {
+        Topic topic =  getTopicById(id);
+        return Response.status(Response.Status.ACCEPTED).entity(topic).build();
+    }
+
     private Topic docToTopic(Document doc) {
         Topic topic = new Topic();
         topic.setId(doc.get("id").toString());
+        topic.setDescription((doc.getString("description")));
         topic.setName(doc.getString("name"));
         return topic;
-    }
-
-    @GET
-    @Path("{id}")
-    public Topic getById(@PathParam("id") String id) {
-        return getTopicById(id);
-
     }
 
     Topic getTopicById(String id) {

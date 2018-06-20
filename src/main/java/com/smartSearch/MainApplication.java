@@ -59,14 +59,14 @@ public class MainApplication extends Application<MainConfiguration> {
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
 
-        final UserResource userResource = new UserResource(database);
-        final TopicResource topicResource = new TopicResource(database);
-        // final AnalyseResource analyseResource = new AnalyseResource();
+        final UserResource userResource               = new UserResource(database);
+        final HelloResource helloResource             = new HelloResource();
+        final TopicResource topicResource             = new TopicResource(database);
         final DestinationResource destinationResource = new DestinationResource(database);
-        final HelloResource helloResource = new HelloResource();
+
         environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-         environment.jersey().register(helloResource);
+        environment.jersey().register(helloResource);
     }
 }

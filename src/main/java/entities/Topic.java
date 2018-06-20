@@ -1,7 +1,7 @@
 package entities;
 
 public class Topic {
-    private String name, id;
+    private String name, id, description;
 
     public Topic() {
     }
@@ -21,4 +21,6 @@ public class Topic {
     public void setId(String id) {
         this.id = id;
     }
+
+    public void setDescription(String description) { this.description = description;}
 }
