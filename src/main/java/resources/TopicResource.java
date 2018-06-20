@@ -1,17 +1,20 @@
 package resources;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import entities.Topic;
-import org.bson.Document;
+import java.util.ArrayList;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import org.bson.Document;
+
+import entities.Topic;
+import org.bson.types.ObjectId;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Path("/topic")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,5 +37,17 @@ public class TopicResource {
         topic.setId(doc.get("_id").toString());
         topic.setName(doc.getString("name"));
         return topic;
+    }
+
+    @GET
+    @Path("{id}")
+    public Topic getById(@PathParam("id") String id) {
+        return getTopicById(id);
+
+    }
+
+    Topic getTopicById(String id) {
+        ArrayList<Topic> topics = topicCollection.find(eq("_id", new ObjectId(id))).map(this::docToTopic).into(new ArrayList<Topic>());
+        return (topics.size() == 1) ? topics.get(0) : null;
     }
 }
