@@ -1,30 +1,24 @@
 package resources;
 
-import static com.mongodb.client.model.Filters.eq;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
-
+import entities.City;
+import entities.User;
 import org.bson.BsonDocument;
 import org.bson.BsonJavaScript;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import entities.City;
-import entities.User;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Path("/destination")
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +36,7 @@ public class DestinationResource {
 
     @GET
     public Response getAllDestination() {
-        ArrayList<City> cities = citiesCollection.find().map(this::docToCity).into(new ArrayList<City>());
+        ArrayList<City> cities = citiesCollection.find().map(this::docToCity).into(new ArrayList<>());
        // JSONArray cities = citiesCollection.find().map(this::docToCity).into(new JSONArray());
         return Response.status(Response.Status.ACCEPTED).entity(cities).build();
     }
@@ -69,7 +63,7 @@ public class DestinationResource {
     @GET
     @Path("{id}")
     public Response getDestinationById(@PathParam("id") String id) {
-        List<City> result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity).into(new ArrayList<City>());
+        List<City> result = citiesCollection.find(eq("_id", new ObjectId(id))).map(this::docToCity).into(new ArrayList<>());
         if (result.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
@@ -83,7 +77,7 @@ public class DestinationResource {
     public Response getDestinationByUser(@PathParam("id") String id) {
         try {
             Object[] result = new Object[2];
-            User user = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser).into(new ArrayList<User>()).get(0);
+            User user = userCollection.find(eq("_id", new ObjectId(id))).map(UserResource::docToUser).into(new ArrayList<>()).get(0);
             result[0] = user;
             BasicDBObject inQuery = new BasicDBObject();
             List<Integer> list = new ArrayList<>();
@@ -93,7 +87,7 @@ public class DestinationResource {
             }
 
             inQuery.put("topics", new BasicDBObject("$in", list));
-            ArrayList<City> cities = citiesCollection.find(inQuery).map(this::docToCity).into(new ArrayList<City>());
+            ArrayList<City> cities = citiesCollection.find(inQuery).map(this::docToCity).into(new ArrayList<>());
             if (cities.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
@@ -106,11 +100,11 @@ public class DestinationResource {
     }
 
     private City docToCity(Document doc) {
-        City city = new City();
-        city.setId(doc.get("_id").toString());
-        city.setName(doc.getString("name"));
-        city.setDescription(doc.getString("description"));
-        city.setTopics((List<Integer>) doc.get("topics"));
-        return city;
+        AtomicReference<City> city = new AtomicReference<>(new City());
+        city.get().setId(doc.get("_id").toString());
+        city.get().setName(doc.getString("name"));
+        city.get().setDescription(doc.getString("description"));
+        city.get().setTopics((List<Integer>) doc.get("topics"));
+        return city.get();
     }
 }

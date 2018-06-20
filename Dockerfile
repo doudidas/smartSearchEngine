@@ -23,7 +23,7 @@ RUN mv src/main/resources/smartSearch.yaml .
 RUN mvn clean
 
 # Clean other files
-RUN rm -rf DockerFile README.md	pom.xml src
+RUN rm -rf DockerFile README.md	pom.xml src target
 
 
 #Set environnement variable

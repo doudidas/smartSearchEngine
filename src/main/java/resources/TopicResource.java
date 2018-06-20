@@ -1,17 +1,14 @@
 package resources;
 
-import java.util.ArrayList;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import entities.Topic;
+import org.bson.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
-import org.bson.Document;
-
-import entities.Topic;
+import java.util.ArrayList;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -27,7 +24,7 @@ public class TopicResource {
 
     @GET
     public Response getAllTopics() {
-        ArrayList<Topic> topics = topicCollection.find().map(this::docToTopic).into(new ArrayList<Topic>());
+        ArrayList<Topic> topics = topicCollection.find().map(this::docToTopic).into(new ArrayList<>());
         return Response.status(Response.Status.ACCEPTED).entity(topics).build();
     }
 
@@ -46,8 +43,8 @@ public class TopicResource {
         return topic;
     }
 
-    Topic getTopicById(String id) {
-        ArrayList<Topic> topics = topicCollection.find(eq("id", id)).map(this::docToTopic).into(new ArrayList<Topic>());
+    private Topic getTopicById(String id) {
+        ArrayList<Topic> topics = topicCollection.find(eq("id", id)).map(this::docToTopic).into(new ArrayList<>());
         return (topics.size() == 1) ? topics.get(0) : null;
     }
 }
