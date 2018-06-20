@@ -18,6 +18,8 @@ public class Topic {
         return id;
     }
 
+    public String getDescription() { return this.description;}
+
     public void setId(String id) {
         this.id = id;
     }
