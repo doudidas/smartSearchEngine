@@ -12,7 +12,6 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import entities.Topic;
-import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -34,7 +33,7 @@ public class TopicResource {
 
     private Topic docToTopic(Document doc) {
         Topic topic = new Topic();
-        topic.setId(doc.get("_id").toString());
+        topic.setId(doc.get("id").toString());
         topic.setName(doc.getString("name"));
         return topic;
     }
@@ -47,7 +46,7 @@ public class TopicResource {
     }
 
     Topic getTopicById(String id) {
-        ArrayList<Topic> topics = topicCollection.find(eq("_id", new ObjectId(id))).map(this::docToTopic).into(new ArrayList<Topic>());
+        ArrayList<Topic> topics = topicCollection.find(eq("id", id)).map(this::docToTopic).into(new ArrayList<Topic>());
         return (topics.size() == 1) ? topics.get(0) : null;
     }
 }
