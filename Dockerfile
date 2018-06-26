@@ -11,7 +11,7 @@ COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 
 # Init
-RUN container_install.sh 
+RUN /usr/src/myapp/container_install.sh 
 
 #Set environnement variable
 
