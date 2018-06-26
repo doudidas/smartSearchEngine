@@ -11,3 +11,4 @@ server:
       port: 8082
 
   rootPath: /api/
+

@@ -3,6 +3,4 @@ mvn package
 mv ./target/API.jar ./API.jar
 mv src/main/resources/smartSearch.yaml .
 mvn clean
-rm -rf !(API.jar|smartSearch.yaml)
-
-
+rm -v !("API.jar"|"smartSearch.yaml");
