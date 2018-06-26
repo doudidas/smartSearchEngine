@@ -11,15 +11,13 @@ COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 
 # Init
-RUN .container_install.sh 
+RUN container_install.sh 
 
 #Set environnement variable
 
 ENV CONTAINER=true
 
 EXPOSE 9000
-
-
 
 # run the pre-compile API
 CMD ["java", "-jar", "./API.jar","serve","./smartSearch.yaml"]
