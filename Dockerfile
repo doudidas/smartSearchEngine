@@ -10,21 +10,8 @@ COPY . /usr/src/myapp
 # Setup the work directory
 WORKDIR /usr/src/myapp
 
-# Creation of the jar file
-RUN mvn package
-
-# Move the jar
-RUN mv ./target/API.jar ./API.jar
-
-# Get the yaml file
-RUN mv src/main/resources/smartSearch.yaml .
-
-# Clean directory
-RUN mvn clean
-
-# Clean other files
-RUN rm -rf DockerFile README.md	pom.xml src target
-
+# Init
+RUN .container_install.sh 
 
 #Set environnement variable
 
