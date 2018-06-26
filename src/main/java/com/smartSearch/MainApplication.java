@@ -1,6 +1,8 @@
 package com.smartSearch;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -27,7 +29,7 @@ public class MainApplication extends Application<MainConfiguration> {
 
     @Override
     public String getName() {
-        return "recipes";
+        return "Spacelama-api";
     }
 
     @Override
@@ -51,7 +53,17 @@ public class MainApplication extends Application<MainConfiguration> {
         MongoClient mongoClient;
         MongoDatabase database;
         String hostname = (System.getenv("CONTAINER") != null) ? "mongo" : "localhost";
-        mongoClient = new MongoClient(hostname, 27017);
+
+
+        mongoClient = new MongoClient(new ServerAddress(hostname, 27017), MongoClientOptions.builder()
+                .socketTimeout(1000)
+                .minHeartbeatFrequency(25)
+                .heartbeatSocketTimeout(1000)
+                .socketTimeout(1000)
+                .connectTimeout(1000)
+                .serverSelectionTimeout(1000)
+                .build());
+
         database = mongoClient.getDatabase("SmartSearchDatabase");
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));

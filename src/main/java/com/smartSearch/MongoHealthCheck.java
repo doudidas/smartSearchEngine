@@ -2,7 +2,8 @@ package com.smartSearch;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientException;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
 
 public class MongoHealthCheck extends HealthCheck {
 
@@ -15,10 +16,13 @@ public class MongoHealthCheck extends HealthCheck {
 
     @Override
     protected Result check() {
-
+        MongoDatabase db = mongoClient.getDatabase("SmartSearchDatabase");
         try {
-            mongoClient.getDatabase("SmartSearchDatabase").listCollectionNames();
-        } catch (MongoClientException ex) {
+            MongoIterable<String> allCollections = db.listCollectionNames();
+            for (String collection : allCollections) {
+                System.out.println("MongoDB collection: " + collection);
+            }
+        } catch (Exception ex) {
             return Result.unhealthy(ex.getMessage());
         }
         return Result.healthy();

@@ -83,7 +83,7 @@ public class UserResource {
                 responseBody = new JSONObject(map);
                 return Response.status(Response.Status.CREATED).entity(responseBody).build();
             } else {
-                map.put("message", "user already exist");
+                map.put("message", "user already exist, please do a PUT Request");
                 responseBody = new JSONObject(map);
                 return Response.status(Response.Status.FORBIDDEN).entity(responseBody).build();
             }
@@ -92,6 +92,23 @@ public class UserResource {
             responseBody = new JSONObject(map);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseBody).build();
         }
+    }
+
+    @PUT
+    public Response updateUserById(User user) throws Exception {
+        Document local = userToDoc(getUserById(user.getId()));
+        boolean userRemoved = removeUser(local);
+        if(userRemoved) {
+            saveToDB(user);
+            return Response.status(Response.Status.ACCEPTED).build();
+        } else {
+            JSONObject responseBody;
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("message", "this user doesn't exist on base !");
+            responseBody = new JSONObject(map);
+            return Response.status(Response.Status.FORBIDDEN).entity(responseBody).build();
+        }
+
     }
 
     private void saveToDB(User user) throws NullPointerException {
