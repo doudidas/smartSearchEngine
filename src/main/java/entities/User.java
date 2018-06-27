@@ -4,10 +4,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String gender;
+    private String status;
+    private String departure;
+    private List<String> topics;
+
+
+
+    private String username;
+    private String hashcode;
+
+    public User(String id, String firstName, String lastName, String email, List<String> topics, String hashcode, String username) {
+        this.id        = id;
+        this.firstName = firstName;
+        this.lastName  = lastName;
+        this.email     = email;
+        this.topics    = new ArrayList<>();
+        this.topics    = topics;
+        this.hashcode  = hashcode;
+        this.username  = username;
+    }
+
+    public String getHashcode() {
+        return hashcode;
+    }
+
+    public void setHashcode(String hashcode) {
+        this.hashcode = hashcode;
+    }
+
+
+
     public String getFirstName() {
         return firstName;
     }
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -44,14 +85,6 @@ public class User {
         this.id = id;
     }
 
-    private String id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String gender;
-    private String status;
-    private String departure;
-    private List<String> topics;
 
     public String getDeparture() {
         return departure;
@@ -64,16 +97,6 @@ public class User {
     public User() {
         topics = new ArrayList<>();
     }
-
-    public User(String id, String firstName, String lastName, String email, List<String> topics) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.topics = new ArrayList<>();
-        this.topics = topics;
-    }
-
     public String getStatus() {
         return status;
     }

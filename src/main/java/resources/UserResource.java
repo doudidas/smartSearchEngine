@@ -115,12 +115,6 @@ public class UserResource {
         userCollection.insertOne(userToDoc(user));
     }
 
-    private Document userToDoc(User user) {
-        return new Document().append("firstName", user.getFirstName()).append("lastName", user.getLastName())
-                .append("topics", user.getTopics()).append("email", user.getEmail()).append("gender", user.getGender())
-                .append("status", user.getStatus()).append("departure", user.getDeparture());
-    }
-
     static User docToUser(Document doc) {
         User user = new User();
         user.setId(doc.get("_id").toString());
@@ -131,7 +125,21 @@ public class UserResource {
         user.setEmail(doc.getString("email"));
         user.setDeparture((doc.getString("departure")));
         user.setTopics((List<String>) doc.get("topics"));
+        user.setHashcode(doc.getString("hashcode"));
+        user.setUsername(doc.getString("username"));
         return user;
+    }
+
+    private Document userToDoc(User user) {
+        return new Document().append("firstName", user.getFirstName())
+                .append("lastName", user.getLastName())
+                .append("topics", user.getTopics())
+                .append("email", user.getEmail())
+                .append("gender", user.getGender())
+                .append("status", user.getStatus())
+                .append("departure", user.getDeparture())
+                .append("username", user.getUsername())
+                .append("hashcode", user.getHashcode());
     }
 
     private Boolean userExist(String email) {
