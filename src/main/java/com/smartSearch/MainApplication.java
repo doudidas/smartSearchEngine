@@ -1,22 +1,25 @@
 package com.smartSearch;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
+
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 import resources.DestinationResource;
 import resources.HelloResource;
 import resources.TopicResource;
 import resources.UserResource;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import java.util.EnumSet;
 
 public class MainApplication extends Application<MainConfiguration> {
 
