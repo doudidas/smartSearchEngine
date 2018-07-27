@@ -312,7 +312,7 @@
               <goal>site</goal>
             </goals>
             <configuration>
-              <outputDirectory>/Users/etopin/Documents/github/smartSearchEngine/target/site</outputDirectory>
+              <outputDirectory>./target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -328,7 +328,7 @@
               <goal>deploy</goal>
             </goals>
             <configuration>
-              <outputDirectory>/Users/etopin/Documents/github/smartSearchEngine/target/site</outputDirectory>
+              <outputDirectory>./target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -339,7 +339,7 @@
           </execution>
         </executions>
         <configuration>
-          <outputDirectory>/Users/etopin/Documents/github/smartSearchEngine/target/site</outputDirectory>
+          <outputDirectory>./target/site</outputDirectory>
           <reportPlugins>
             <reportPlugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -351,7 +351,7 @@
     </plugins>
   </build>
   <reporting>
-    <outputDirectory>/Users/etopin/Documents/github/smartSearchEngine/target/site</outputDirectory>
+    <outputDirectory>./target/site</outputDirectory>
   </reporting>
 </project>
 
