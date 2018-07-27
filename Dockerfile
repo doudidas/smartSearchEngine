@@ -10,7 +10,6 @@ COPY . /usr/src/myapp
 # Setup the work directory
 WORKDIR /usr/src/myapp
 
-RUN mvn package;
 # Init
 RUN /usr/src/myapp/container_install.sh
 

@@ -1,4 +1,5 @@
 #!/bin/bash
-mv ./target/API.jar ./API.jar;
-mv src/main/resources/smartSearch.yaml; .
+
+mvn package
+mv ./target/API.jar ./API.jar
 mvn clean;
