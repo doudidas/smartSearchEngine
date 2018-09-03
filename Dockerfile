@@ -20,4 +20,4 @@ ENV CONTAINER=true
 EXPOSE 9000
 
 # run the pre-compile API
-CMD ["java", "-jar", "./API.jar","serve","./smartSearch.yaml"]
+CMD ["java", "-jar", "/usr/src/myapp/API.jar","serve","/usr/src/myapp/smartSearch.yaml"]
