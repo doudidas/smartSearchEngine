@@ -1,5 +1,5 @@
 # Get the container image compatible with maven
-FROM maven:latest
+FROM maven:latest as build
 
 # label
 LABEL author="Edouard Topin"
@@ -13,6 +13,11 @@ WORKDIR /usr/src/myapp
 # Init
 RUN /usr/src/myapp/container_install.sh
 
+FROM java:alpine
+RUN mkdir /app 
+COPY  --from=build  /usr/src/myapp/ /app
+WORKDIR /app 
+
 #Set environnement variable
 
 ENV CONTAINER=true
@@ -20,4 +25,4 @@ ENV CONTAINER=true
 EXPOSE 9000
 
 # run the pre-compile API
-CMD ["java", "-jar", "/usr/src/myapp/API.jar","serve","/usr/src/myapp/smartSearch.yaml"]
+CMD ["java", "-jar", "/app/API.jar","serve","/app/smartSearch.yaml"]
