@@ -1,23 +1,18 @@
 package com.smartSearch;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
-
-import org.eclipse.jetty.servlets.CrossOriginFilter;
-
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.util.EnumSet;
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import resources.DestinationResource;
-import resources.HelloResource;
 import resources.TopicResource;
 import resources.UserResource;
 
@@ -57,28 +52,20 @@ public class MainApplication extends Application<MainConfiguration> {
         MongoDatabase database;
         String hostname = (System.getenv("CONTAINER") != null) ? "mongo" : "localhost";
 
-
-        mongoClient = new MongoClient(new ServerAddress(hostname, 27017), MongoClientOptions.builder()
-                .socketTimeout(1000)
-                .minHeartbeatFrequency(25)
-                .heartbeatSocketTimeout(1000)
-                .socketTimeout(1000)
-                .connectTimeout(1000)
-                .serverSelectionTimeout(1000)
-                .build());
+        mongoClient = new MongoClient(new ServerAddress(hostname, 27017),
+                MongoClientOptions.builder().socketTimeout(1000).minHeartbeatFrequency(25).heartbeatSocketTimeout(1000)
+                        .socketTimeout(1000).connectTimeout(1000).serverSelectionTimeout(1000).build());
 
         database = mongoClient.getDatabase("SmartSearchDatabase");
 
         environment.healthChecks().register("mongo", new MongoHealthCheck(mongoClient));
 
-        final UserResource userResource               = new UserResource(database);
-        final HelloResource helloResource             = new HelloResource();
-        final TopicResource topicResource             = new TopicResource(database);
+        final UserResource userResource = new UserResource(database);
+        final TopicResource topicResource = new TopicResource(database);
         final DestinationResource destinationResource = new DestinationResource(database);
 
         environment.jersey().register(destinationResource);
         environment.jersey().register(userResource);
         environment.jersey().register(topicResource);
-        environment.jersey().register(helloResource);
     }
 }
