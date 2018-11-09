@@ -29,7 +29,6 @@ import org.json.simple.JSONObject;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
-
     private final MongoCollection<Document> userCollection;
     // private final MongoCollection<Document> citiesCollection;
     private List<User> users = new ArrayList<>();
