@@ -1,8 +1,8 @@
 package com.smartSearch;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.hibernate.validator.constraints.NotEmpty;
+
 
 public class MainConfiguration extends io.dropwizard.Configuration {
 

@@ -2,10 +2,14 @@ package resources;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
+import entities.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,18 +20,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.DeleteResult;
-
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
-
-import entities.User;
 
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -108,7 +104,7 @@ public class UserResource {
     public Response updateUserById(User user) throws Exception {
         Document local = userToDoc(getUserById(user.getId()));
         boolean userRemoved = removeUser(local);
-        if(userRemoved) {
+        if (userRemoved) {
             saveToDB(user);
             return Response.status(Response.Status.ACCEPTED).build();
         } else {
@@ -141,15 +137,10 @@ public class UserResource {
     }
 
     private Document userToDoc(User user) {
-        return new Document().append("firstName", user.getFirstName())
-                .append("lastName", user.getLastName())
-                .append("topics", user.getTopics())
-                .append("email", user.getEmail())
-                .append("gender", user.getGender())
-                .append("status", user.getStatus())
-                .append("departure", user.getDeparture())
-                .append("username", user.getUsername())
-                .append("hashcode", user.getHashcode());
+        return new Document().append("firstName", user.getFirstName()).append("lastName", user.getLastName())
+                .append("topics", user.getTopics()).append("email", user.getEmail()).append("gender", user.getGender())
+                .append("status", user.getStatus()).append("departure", user.getDeparture())
+                .append("username", user.getUsername()).append("hashcode", user.getHashcode());
     }
 
     private Boolean userExist(String email) {
